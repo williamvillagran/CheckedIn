@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="edu.utsa.checkedin" />
+                  <option name="mobileSdkAppId" value="1:1090346119524:android:dc5158fa1501f6dec28a71" />
+                  <option name="projectId" value="checkedi" />
+                  <option name="projectNumber" value="1090346119524" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
