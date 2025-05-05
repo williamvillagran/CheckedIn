@@ -1,4 +1,5 @@
 package edu.utsa.checkedin;
 
-public class Login {
+public class LoginActivity {
+
 }
