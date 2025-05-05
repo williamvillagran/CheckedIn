@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         //There is an error
         loginButton.setOnClickListener(v -> loginUserAccount());
 
+
     }
     private void loginUserAccount(){
         String email = loginEntry.getText().toString().trim();
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Login successful
                             Toast.makeText(MainActivity.this, "Login successful!!", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            startActivity(new Intent(MainActivity.this, HomeActivity.class));
                             finish();
                         } else {
                             // Login failed
