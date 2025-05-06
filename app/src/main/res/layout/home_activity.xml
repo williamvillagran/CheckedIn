@@ -9,7 +9,7 @@
         android:id="@+id/beginToggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="125dp"
         android:text="beginToggleButton"
         android:textOff="Begin Trip"
         android:textOn="End Trip"
@@ -33,10 +33,9 @@
         android:id="@+id/addFriendsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="216dp"
+        android:layout_marginTop="150dp"
         android:text="Add Friends"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/findFriendsButton" />
 

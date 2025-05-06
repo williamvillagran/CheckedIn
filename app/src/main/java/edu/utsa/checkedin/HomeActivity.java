@@ -16,15 +16,15 @@ import android.Manifest;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private ToggleButton beginToggleButton = findViewById(R.id.beginToggleButton);
-    private Button findFriendsButton = findViewById(R.id.findFriendsButton);
-    private Button addFriendsButton =  findViewById(R.id.addFriendsButton);
-    private Button settingsButton = findViewById(R.id.settingsButton);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
+
+        ToggleButton beginToggleButton = findViewById(R.id.beginToggleButton);
+        Button findFriendsButton = findViewById(R.id.findFriendsButton);
+        Button addFriendsButton =  findViewById(R.id.addFriendsButton);
+        Button settingsButton = findViewById(R.id.settingsButton);
 
         requestPermissions();
 
