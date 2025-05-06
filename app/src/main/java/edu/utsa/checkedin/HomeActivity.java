@@ -54,13 +54,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-//        addFriendsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(AddFriendsActivity.this, MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        addFriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, AddFriendsActivity.class);
+                startActivity(intent);
+            }
+        });
 //
 //        settingsButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
