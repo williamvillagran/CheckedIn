@@ -1,9 +1,6 @@
 package edu.utsa.checkedin;
 
-public abstract class LocationSharing {
+public interface LocationSharing {
 
-    public void shareLocation() {
-
-    }
 
 }
