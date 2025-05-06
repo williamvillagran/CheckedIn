@@ -24,6 +24,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.home_activity);
 
         requestPermissions();
 
@@ -40,29 +41,29 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        findFriendsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FindFriendsActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        addFriendsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddFriendsActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+//        findFriendsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(FindFriendsActivity.this, MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        addFriendsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(AddFriendsActivity.this, MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        settingsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
     }
 
