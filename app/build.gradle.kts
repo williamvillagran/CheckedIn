@@ -39,9 +39,11 @@ android {
 
 dependencies {
     implementation(libs.google.maps)
+    implementation("com.google.android.gms:play-services-location:19.0.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.firebase.auth)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
