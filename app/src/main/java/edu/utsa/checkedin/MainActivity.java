@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private EditText loginEntry;
     private EditText passwordEntry;
-    private Button loginButton;
-    private Button registerButton;
+    private ImageButton loginButton;
+    private ImageButton registerButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
