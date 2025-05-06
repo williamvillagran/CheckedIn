@@ -1,5 +1,7 @@
 package edu.utsa.checkedin;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
