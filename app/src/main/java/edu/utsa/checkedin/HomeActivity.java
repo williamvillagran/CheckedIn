@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Button beginButton;
+    private ToggleButton beginToggleButton;
     private Button findFriendsButton;
     private Button addFriendsButton;
     private Button settingsButton;
@@ -19,11 +22,17 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        beginButton.setOnClickListener(new View.OnClickListener() {
+        requestPermissions();
+
+        beginToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BeginActivity.this, MainActivity.class);
-                startActivity(intent);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                    Toast.makeText(getApplicationContext(), "Sharing Has Started", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Sharing Has Stopped", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

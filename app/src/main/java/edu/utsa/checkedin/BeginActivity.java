@@ -11,4 +11,5 @@ public class BeginActivity extends AppCompatActivity {
         setContentView(R.layout.begin_activity);
     }
 
+    public void shareLocation
 }
