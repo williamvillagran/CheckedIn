@@ -1,6 +1,12 @@
 package edu.utsa.checkedin;
 
-public interface LocationSharing {
+import android.location.LocationRequest;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public abstract class LocationSharing extends AppCompatActivity {
+
+    private LocationRequest locationRequest;
 
 
 }

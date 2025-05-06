@@ -77,7 +77,8 @@ public class HomeActivity extends AppCompatActivity {
                 Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.FOREGROUND_SERVICE
+                Manifest.permission.FOREGROUND_SERVICE,
+                Manifest.permission.ACCESS_NETWORK_STATE
         };
 
         List<String> permissionsToRequest = new ArrayList<>();
