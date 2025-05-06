@@ -46,14 +46,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-//        findFriendsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(FindFriendsActivity.this, MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//
+        findFriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, FindFriendsActivity.class);
+                startActivity(intent);
+            }
+        });
+
 //        addFriendsButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -101,5 +101,6 @@ public class HomeActivity extends AppCompatActivity {
             Toast.makeText(this, "All permissions already granted", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 }

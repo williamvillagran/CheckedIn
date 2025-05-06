@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.1"
+mapsSecret = "2.0.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -7,6 +8,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.2.0"
+googleMaps = "19.0.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -15,8 +17,10 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+google-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googleMaps" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
-
+map-secret = {id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsSecret"}

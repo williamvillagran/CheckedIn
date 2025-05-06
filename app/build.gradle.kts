@@ -1,16 +1,17 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
-
+    alias(libs.plugins.map.secret)
 }
 
 android {
     namespace = "edu.utsa.checkedin"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "edu.utsa.checkedin"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -31,10 +32,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
-
+    implementation(libs.google.maps)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.firebase.auth)
