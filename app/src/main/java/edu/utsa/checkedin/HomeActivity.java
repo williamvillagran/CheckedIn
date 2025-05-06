@@ -10,6 +10,9 @@ import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -59,6 +62,18 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+    private void requestPermissions() {
+        String[] permissions = {
+                android.permission.ACCESS_COARSE_LOCATION,
+                android.permission.ACCESS_FINE_LOCATION,
+                android.permission.FOREGROUND_SERVICE
+        };
+
+        List<String> permissionsToRequest = new ArrayList<>();
+
 
     }
 }
