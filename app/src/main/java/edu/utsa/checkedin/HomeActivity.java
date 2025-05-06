@@ -1,6 +1,7 @@
 package edu.utsa.checkedin;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,12 +10,16 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 import android.Manifest;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private static final int PERMISSION_REQUEST_CODE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +82,24 @@ public class HomeActivity extends AppCompatActivity {
 
         List<String> permissionsToRequest = new ArrayList<>();
 
+        // Filter out the permissions that are not yet granted
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
 
-
+        // If there are permissions that need to be requested, ask the user for them
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]), // Convert list to array
+                    PERMISSION_REQUEST_CODE // Pass the request code
+            );
+        } else {
+            // All permissions are already granted
+            Toast.makeText(this, "All permissions already granted", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
