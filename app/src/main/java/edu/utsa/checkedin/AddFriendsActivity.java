@@ -34,7 +34,6 @@ public class AddFriendsActivity extends AppCompatActivity {
     private DatabaseReference usersRef;
     private DatabaseReference friendsRef;
     private List<Friend> myFriends = new ArrayList<>();
-    LayoutInflater inflater = LayoutInflater.from(this);
 
     private String currentUserId;
     private String foundUserId;  // Stores UID of searched user
@@ -113,17 +112,20 @@ public class AddFriendsActivity extends AppCompatActivity {
                         if (snapshot.exists()) {
                             String foundUserEmail = snapshot.child("email").getValue(String.class);
 
-                            // Add friend to current user's list
-                            Friend friends = new Friend(foundUserId, foundUserEmail);
-                            friendsRef.child(currentUserId).child(foundUserId).setValue(friends);
+                            // Add to current user's friends list
+                            Friend friend = new Friend(foundUserId, foundUserEmail);
+                            friendsRef.child(currentUserId).child(foundUserId).setValue(friend);
 
-                            // Add current user to friend's list
+                            // Add current user to friend's friend list
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                             Friend reverseEntry = new Friend(currentUser.getUid(), currentUser.getEmail());
                             friendsRef.child(foundUserId).child(currentUserId).setValue(reverseEntry);
 
                             Toast.makeText(AddFriendsActivity.this, "Friend added!", Toast.LENGTH_SHORT).show();
                             addFriendButton.setEnabled(false);
+
+                            // Optionally refresh the friend circle
+                            loadFriendCircle();
                         }
                     }
 
@@ -140,16 +142,18 @@ public class AddFriendsActivity extends AppCompatActivity {
 
     private void loadFriendCircle() {
         myFriends.clear();
+        friendContainer.removeAllViews();
 
         friendsRef.child(currentUserId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        LayoutInflater inflater = LayoutInflater.from(AddFriendsActivity.this);
+
                         for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
                             Friend friend = friendSnapshot.getValue(Friend.class);
                             if (friend != null) {
                                 myFriends.add(friend);
-
 
                                 View cardView = inflater.inflate(R.layout.friend_card, friendContainer, false);
                                 TextView friendName = cardView.findViewById(R.id.textFriendEmail);

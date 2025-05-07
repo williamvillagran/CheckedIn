@@ -57,16 +57,6 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             user = auth.getCurrentUser();
-                            if (user != null) {
-                                String uid = user.getUid();
-
-                                // Write to /users/userId/email
-                                com.google.firebase.database.FirebaseDatabase.getInstance()
-                                        .getReference("users")
-                                        .child(uid)
-                                        .child("email")
-                                        .setValue(email);
-                            }
 
                             Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_LONG).show();
                             // Navigate to MainActivity

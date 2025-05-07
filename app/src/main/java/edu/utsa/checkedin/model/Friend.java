@@ -6,7 +6,7 @@ public class Friend {
 
     public Friend () {}
 
-    public Friend(String email, String Uid) {
+    public Friend(String Uid, String email) {
         this.email = email;
         this.Uid = Uid;
     }

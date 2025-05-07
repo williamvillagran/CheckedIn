@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -55,41 +56,50 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    private void loginUserAccount(){
+
+    private void loginUserAccount() {
         String email = loginEntry.getText().toString().trim();
         String password = passwordEntry.getText().toString().trim();
 
-        // Validate input
-        if (email.isEmpty() || password.isEmpty()){
+        if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Login existing user
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            // Login successful
-                            Toast.makeText(MainActivity.this, userId, Toast.LENGTH_LONG).show();
-//                            Toast.makeText(MainActivity.this, "Login successful!!", Toast.LENGTH_LONG).show();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user != null) {
+                                String userId = user.getUid();
+                                String userEmail = user.getEmail();
+
+                                // Write to Realtime Database
+                                com.google.firebase.database.FirebaseDatabase.getInstance()
+                                        .getReference("users")
+                                        .child(userId)
+                                        .child("userID")
+                                        .setValue(userId);
+                                // Write to Realtime Database
+                                com.google.firebase.database.FirebaseDatabase.getInstance()
+                                        .getReference("users")
+                                        .child(userId)
+                                        .child("email")
+                                        .setValue(userEmail);
+                            }
+
+                            Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(MainActivity.this, HomeActivity.class));
                             finish();
                         } else {
-                            // Login failed
                             Toast.makeText(MainActivity.this, "Login failed!!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-
-
-
-
-
-
     }
+
 
 
 }
