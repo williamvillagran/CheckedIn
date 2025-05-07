@@ -11,12 +11,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText emailTextView, passwordTextView;
     private Button button;
     private FirebaseAuth auth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Initialize FirebaseAuth instance
         auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
 
         emailTextView = findViewById(R.id.emailRegister);
         passwordTextView = findViewById(R.id.passwordRegister);
@@ -52,6 +55,18 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            user = auth.getCurrentUser();
+                            if (user != null) {
+                                String uid = user.getUid();
+
+                                // Write to /users/userId/email
+                                com.google.firebase.database.FirebaseDatabase.getInstance()
+                                        .getReference("users")
+                                        .child(uid)
+                                        .child("email")
+                                        .setValue(email);
+                            }
+
                             Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_LONG).show();
                             // Navigate to MainActivity
                             startActivity(new Intent(RegisterActivity.this, MainActivity.class));

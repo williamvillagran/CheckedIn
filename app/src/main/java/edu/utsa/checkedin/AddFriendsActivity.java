@@ -103,14 +103,13 @@ public class AddFriendsActivity extends AppCompatActivity {
                         if (snapshot.exists()) {
                             String foundUserEmail = snapshot.child("email").getValue(String.class);
 
-                            Friend friends = new Friend(foundUserEmail);
-
                             // Add friend to current user's list
+                            Friend friends = new Friend(foundUserId, foundUserEmail);
                             friendsRef.child(currentUserId).child(foundUserId).setValue(friends);
 
                             // Add current user to friend's list
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                            Friend reverseEntry = new Friend(currentUser.getEmail());
+                            Friend reverseEntry = new Friend(currentUser.getUid(), currentUser.getEmail());
                             friendsRef.child(foundUserId).child(currentUserId).setValue(reverseEntry);
 
                             Toast.makeText(AddFriendsActivity.this, "Friend added!", Toast.LENGTH_SHORT).show();

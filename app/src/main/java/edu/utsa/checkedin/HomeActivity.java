@@ -92,12 +92,15 @@ public class HomeActivity extends AppCompatActivity {
         }
 
     private void startSharingLocation() {
+        // Create a location request
         LocationRequest request = LocationRequest.create()
                 .setInterval(5000)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY);
 
+        // Callback for receiving location updates
         locationCallback = new LocationCallback() {
             @Override
+            // Called when a location update is received
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
                     tripManager.updateTripLocation(location); // Updates Firestore
@@ -105,6 +108,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
 
+        // Check for location permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
             return;
@@ -117,8 +121,10 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        // Request location updates
         fusedLocationClient.requestLocationUpdates(request, locationCallback, getMainLooper());
     }
+
 
     private void stopSharingLocation() {
         if (locationCallback != null) {
