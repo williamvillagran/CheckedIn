@@ -2,6 +2,7 @@ package edu.utsa.checkedin;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,9 +18,23 @@ import java.util.ArrayList;
 import java.util.List;
 import android.Manifest;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.Priority;
+import com.google.firebase.auth.FirebaseAuth;
+
+
 public class HomeActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 123;
+
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
+    private TripManager tripManager;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +48,19 @@ public class HomeActivity extends AppCompatActivity {
 
         requestPermissions();
 
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        tripManager = new TripManager(this, userId);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+
         beginToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-
+                    startSharingLocation();
                     Toast.makeText(getApplicationContext(), "Sharing Has Started", Toast.LENGTH_SHORT).show();
                 } else {
-
+                    stopSharingLocation();
                     Toast.makeText(getApplicationContext(), "Sharing Has Stopped", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -69,7 +89,42 @@ public class HomeActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+        }
 
+    private void startSharingLocation() {
+        LocationRequest request = LocationRequest.create()
+                .setInterval(5000)
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    tripManager.updateTripLocation(location); // Updates Firestore
+                }
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Log the start of the trip with the first location
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                tripManager.beginNewTrip(location);
+            }
+        });
+
+        fusedLocationClient.requestLocationUpdates(request, locationCallback, getMainLooper());
+    }
+
+    private void stopSharingLocation() {
+        if (locationCallback != null) {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+        tripManager.stopTrip();
     }
 
     private void requestPermissions() {
@@ -103,5 +158,4 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-}
+    }
