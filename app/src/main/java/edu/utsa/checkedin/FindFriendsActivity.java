@@ -13,7 +13,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.utsa.checkedin.model.Friend;
 
@@ -23,6 +25,7 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
     private FirebaseAuth auth;
     private DatabaseReference usersRef;
     private List<Friend> myFriends = new ArrayList<>();
+    private final Map<String, Marker> friendMarkers = new HashMap<>(); // Track active markers
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +58,6 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         myFriends.clear();
-                        if (googleMap != null) {
-                            googleMap.clear(); // Clear old markers
-                        }
 
                         for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
                             Friend friend = friendSnapshot.getValue(Friend.class);
@@ -85,9 +85,20 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
 
                         if (lat != null && lng != null && googleMap != null) {
                             LatLng friendLoc = new LatLng(lat, lng);
-                            googleMap.addMarker(new MarkerOptions()
+
+                            // 🧼 Remove old marker for this friend if exists
+                            if (friendMarkers.containsKey(friend.getUid())) {
+                                Marker oldMarker = friendMarkers.get(friend.getUid());
+                                if (oldMarker != null) oldMarker.remove();
+                            }
+
+                            // ➕ Add new marker
+                            Marker newMarker = googleMap.addMarker(new MarkerOptions()
                                     .position(friendLoc)
                                     .title(friend.getEmail()));
+
+                            // 💾 Store new marker
+                            friendMarkers.put(friend.getUid(), newMarker);
                         }
                     }
 
