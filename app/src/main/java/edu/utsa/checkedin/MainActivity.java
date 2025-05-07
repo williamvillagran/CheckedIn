@@ -65,13 +65,11 @@ public class MainActivity extends AppCompatActivity {
         String email = loginEntry.getText().toString().trim();
         String password = passwordEntry.getText().toString().trim();
 
-        // Validate input
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Login existing user
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -81,13 +79,24 @@ public class MainActivity extends AppCompatActivity {
                             String userId = currentUser.getUid();
                             String email = currentUser.getEmail();
 
-                            // Realtime DB reference
                             DatabaseReference userRef = FirebaseDatabase.getInstance()
                                     .getReference("users")
                                     .child(userId);
 
-                            userRef.child("email").setValue(email);
-                            userRef.child("friends").setValue("");
+                            // Only set the email if it's not already there
+                            userRef.child("email").addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                                    if (!snapshot.exists()) {
+                                        userRef.child("email").setValue(email);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull com.google.firebase.database.DatabaseError error) {
+                                    // Optional: handle error
+                                }
+                            });
 
                             Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(MainActivity.this, HomeActivity.class));

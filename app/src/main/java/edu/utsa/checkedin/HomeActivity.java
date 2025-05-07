@@ -15,7 +15,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import android.Manifest;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -25,7 +27,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.Priority;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -52,56 +55,57 @@ public class HomeActivity extends AppCompatActivity {
         tripManager = new TripManager(this, userId);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-        // Set up the onCheckedChangeListener for the ToggleButton
-        beginToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    startSharingLocation();
-                    Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_SHORT).show();
-                } else {
-                    stopSharingLocation();
-                    Toast.makeText(getApplicationContext(), "Sharing Has Stopped", Toast.LENGTH_SHORT).show();
-                }
+        // Toggle button behavior
+        beginToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                startSharingLocation();
+                Toast.makeText(getApplicationContext(), "Started Sharing Location", Toast.LENGTH_SHORT).show();
+            } else {
+                stopSharingLocation();
+                Toast.makeText(getApplicationContext(), "Sharing Has Stopped", Toast.LENGTH_SHORT).show();
             }
         });
 
-        findFriendsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, FindFriendsActivity.class);
-                startActivity(intent);
-            }
+        findFriendsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, FindFriendsActivity.class);
+            startActivity(intent);
         });
 
-        addFriendsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, AddFriendsActivity.class);
-                startActivity(intent);
-            }
+        addFriendsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, AddFriendsActivity.class);
+            startActivity(intent);
         });
-//
-//        settingsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-//                startActivity(intent);
-//            }
+
+//        settingsButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
+//            startActivity(intent);
 //        });
-        }
+    }
+
     private void startSharingLocation() {
         LocationRequest request = LocationRequest.create()
                 .setInterval(5000)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY);
 
-        // Create a new LocationCallback
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
-                    tripManager.updateTripLocation(location); // Updates Firestore
+                    // ✅ Update Firestore
+                    tripManager.updateTripLocation(location);
+
+                    // ✅ Update Realtime Database
+                    DatabaseReference userLocationRef = FirebaseDatabase.getInstance()
+                            .getReference("users")
+                            .child(userId)
+                            .child("location");
+
+                    Map<String, Object> locMap = new HashMap<>();
+                    locMap.put("latitude", location.getLatitude());
+                    locMap.put("longitude", location.getLongitude());
+
+                    userLocationRef.setValue(locMap)
+                            .addOnFailureListener(e -> Toast.makeText(HomeActivity.this, "Failed to update location in RTDB", Toast.LENGTH_SHORT).show());
                 }
             }
         };
@@ -121,12 +125,31 @@ public class HomeActivity extends AppCompatActivity {
         fusedLocationClient.requestLocationUpdates(request, locationCallback, getMainLooper());
     }
 
+//    private void stopSharingLocation() {
+//        if (locationCallback != null) {
+//            fusedLocationClient.removeLocationUpdates(locationCallback);
+//        }
+//        tripManager.stopTrip();
+//    }
+
     private void stopSharingLocation() {
         if (locationCallback != null) {
             fusedLocationClient.removeLocationUpdates(locationCallback);
         }
+
+        // 🔥 Delete location from Realtime Database
+        DatabaseReference locationRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("location");
+
+        locationRef.removeValue()
+                .addOnSuccessListener(aVoid -> Toast.makeText(HomeActivity.this, "Location removed from RTDB", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(HomeActivity.this, "Failed to remove location", Toast.LENGTH_SHORT).show());
+
         tripManager.stopTrip();
     }
+
 
     private void requestPermissions() {
         String[] permissions = {
@@ -138,25 +161,20 @@ public class HomeActivity extends AppCompatActivity {
         };
 
         List<String> permissionsToRequest = new ArrayList<>();
-
-        // Filter out the permissions that are not yet granted
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 permissionsToRequest.add(permission);
             }
         }
 
-        // If there are permissions that need to be requested, ask the user for them
         if (!permissionsToRequest.isEmpty()) {
             ActivityCompat.requestPermissions(
                     this,
-                    permissionsToRequest.toArray(new String[0]), // Convert list to array
-                    PERMISSION_REQUEST_CODE // Pass the request code
+                    permissionsToRequest.toArray(new String[0]),
+                    PERMISSION_REQUEST_CODE
             );
         } else {
-            // All permissions are already granted
             Toast.makeText(this, "All permissions already granted", Toast.LENGTH_SHORT).show();
         }
     }
-
-    }
+}
