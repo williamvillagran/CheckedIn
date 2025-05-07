@@ -18,9 +18,10 @@ import java.util.List;
 import edu.utsa.checkedin.model.Friend;
 
 public class FindFriendsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
     private GoogleMap googleMap;
-    private DatabaseReference usersRef;
     private FirebaseAuth auth;
+    private DatabaseReference usersRef;
     private List<Friend> myFriends = new ArrayList<>();
 
     @Override
@@ -28,17 +29,21 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_friends_activity);
 
-        usersRef = FirebaseDatabase.getInstance().getReference("users");
         auth = FirebaseAuth.getInstance();
+        usersRef = FirebaseDatabase.getInstance().getReference("users");
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.id_map);
-        mapFragment.getMapAsync(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.id_map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        } else {
+            Toast.makeText(this, "Map initialization error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
+    public void onMapReady(GoogleMap map) {
+        this.googleMap = map;
         loadAndDisplayFriendsLocations();
     }
 
@@ -46,36 +51,19 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
         String currentUserId = auth.getCurrentUser().getUid();
 
         usersRef.child(currentUserId).child("friends")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         myFriends.clear();
+                        if (googleMap != null) {
+                            googleMap.clear(); // Clear old markers
+                        }
+
                         for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
                             Friend friend = friendSnapshot.getValue(Friend.class);
                             if (friend != null) {
                                 myFriends.add(friend);
-
-                                String friendUid = friend.getUid();
-                                usersRef.child(friendUid).child("location")
-                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot locationSnapshot) {
-                                                Double lat = locationSnapshot.child("latitude").getValue(Double.class);
-                                                Double lng = locationSnapshot.child("longitude").getValue(Double.class);
-
-                                                if (lat != null && lng != null && googleMap != null) {
-                                                    LatLng friendLoc = new LatLng(lat, lng);
-                                                    googleMap.addMarker(new MarkerOptions()
-                                                            .position(friendLoc)
-                                                            .title(friend.getEmail()));
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(FindFriendsActivity.this, "Failed to get friend location", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                fetchFriendLocation(friend);
                             }
                         }
                     }
@@ -83,6 +71,29 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Toast.makeText(FindFriendsActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void fetchFriendLocation(Friend friend) {
+        usersRef.child(friend.getUid()).child("location")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Double lat = snapshot.child("latitude").getValue(Double.class);
+                        Double lng = snapshot.child("longitude").getValue(Double.class);
+
+                        if (lat != null && lng != null && googleMap != null) {
+                            LatLng friendLoc = new LatLng(lat, lng);
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(friendLoc)
+                                    .title(friend.getEmail()));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(FindFriendsActivity.this, "Failed to fetch location for " + friend.getEmail(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
