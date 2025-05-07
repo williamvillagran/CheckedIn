@@ -43,7 +43,7 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.366"
+        app:layout_constraintVertical_bias="0.377"
         app:srcCompat="@drawable/find_friends_button" />
 
     <ImageButton
@@ -66,12 +66,12 @@
         android:layout_width="220dp"
         android:layout_height="56dp"
         android:backgroundTint="#1A73E8"
-        android:fontFamily="@font/open_sans_medium"
+        android:fontFamily="@font/open_sans_semibold"
         android:text="beginToggleButton"
-        android:textColor="#FFFFFF"
+        android:textColor="#F4F4F5"
         android:textOff="Begin Trip"
         android:textOn="End Trip"
-        android:textSize="34sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
