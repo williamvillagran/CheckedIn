@@ -1,30 +1,30 @@
 package edu.utsa.checkedin.model;
 
 public class Friend {
-    public String Uid;
-    public String email;
+    private String uid;
+    private String email;
 
-    public Friend () {}
+    // REQUIRED no-arg constructor
+    public Friend() {}
 
-    public Friend(String Uid, String email) {
+    public Friend(String uid, String email) {
+        this.uid = uid;
         this.email = email;
-        this.Uid = Uid;
     }
 
     public String getUid() {
-        return Uid;
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setUid(String Uid) {
-        this.Uid = Uid;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
 }

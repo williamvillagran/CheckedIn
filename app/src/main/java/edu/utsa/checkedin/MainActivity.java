@@ -20,7 +20,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText passwordEntry;
     private ImageButton loginButton;
     private ImageButton registerButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,43 +59,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     private void loginUserAccount() {
         String email = loginEntry.getText().toString().trim();
         String password = passwordEntry.getText().toString().trim();
 
+        // Validate input
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Login existing user
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user != null) {
-                                String userId = user.getUid();
-                                String userEmail = user.getEmail();
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            String userId = currentUser.getUid();
+                            String email = currentUser.getEmail();
 
-                                // Write to Realtime Database
-                                com.google.firebase.database.FirebaseDatabase.getInstance()
-                                        .getReference("users")
-                                        .child(userId)
-                                        .child("userID")
-                                        .setValue(userId);
-                                // Write to Realtime Database
-                                com.google.firebase.database.FirebaseDatabase.getInstance()
-                                        .getReference("users")
-                                        .child(userId)
-                                        .child("email")
-                                        .setValue(userEmail);
-                            }
+                            // Realtime DB reference
+                            DatabaseReference userRef = FirebaseDatabase.getInstance()
+                                    .getReference("users")
+                                    .child(userId);
 
-                            Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                            userRef.child("email").setValue(email);
+                            userRef.child("friends").setValue("");
+
+                            Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(MainActivity.this, HomeActivity.class));
                             finish();
                         } else {
@@ -99,7 +98,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
-
 }
