@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-database:20.3.0")
     implementation(libs.google.maps)
     implementation(libs.appcompat)
     implementation(libs.material)

@@ -1,5 +1,7 @@
 package edu.utsa.checkedin;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
