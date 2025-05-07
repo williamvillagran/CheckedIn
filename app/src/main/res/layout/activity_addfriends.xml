@@ -44,4 +44,15 @@
         android:enabled="false"
         android:padding="12dp" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="454dp">
+
+        <LinearLayout
+            android:id="@+id/friendContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
 </LinearLayout>

@@ -1,18 +1,23 @@
 package edu.utsa.checkedin;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +28,13 @@ public class AddFriendsActivity extends AppCompatActivity {
     private EditText emailInput;
     private Button searchButton;
     private Button addFriendButton;
+    private LinearLayout friendContainer;
 
     private FirebaseAuth auth;
     private DatabaseReference usersRef;
     private DatabaseReference friendsRef;
     private List<Friend> myFriends = new ArrayList<>();
+    LayoutInflater inflater = LayoutInflater.from(this);
 
     private String currentUserId;
     private String foundUserId;  // Stores UID of searched user
@@ -41,6 +48,9 @@ public class AddFriendsActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         searchButton = findViewById(R.id.searchButton);
         addFriendButton = findViewById(R.id.addFriendButton);
+
+        friendContainer = findViewById(R.id.friendContainer);
+
 
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -139,9 +149,14 @@ public class AddFriendsActivity extends AppCompatActivity {
                             Friend friend = friendSnapshot.getValue(Friend.class);
                             if (friend != null) {
                                 myFriends.add(friend);
+
+
+                                View cardView = inflater.inflate(R.layout.friend_card, friendContainer, false);
+                                TextView friendName = cardView.findViewById(R.id.textFriendEmail);
+                                friendName.setText(friend.getEmail()); // or getName() if you store names
+                                friendContainer.addView(cardView);
                             }
                         }
-                        // TODO: Optional – display in RecyclerView
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
