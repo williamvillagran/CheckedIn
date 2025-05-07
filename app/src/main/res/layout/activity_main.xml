@@ -6,11 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/checkedinlogo"
+        android:layout_width="227dp"
+        android:layout_height="252dp"
+        android:layout_marginBottom="452dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/checkedin_logo" />
+
     <EditText
         android:id="@+id/loginEntry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="412dp"
+        android:layout_marginBottom="384dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -23,22 +34,26 @@
         android:id="@+id/passwordEntry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="48dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginEntry" />
+        app:layout_constraintTop_toBottomOf="@+id/loginEntry"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/loginButton"
-        android:layout_width="255dp"
-        android:layout_height="178dp"
-        android:backgroundTint="#FFFFFF"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="163dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="136dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:contentDescription="Login Button"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginEntry"
@@ -46,27 +61,17 @@
 
     <ImageButton
         android:id="@+id/registerButton"
-        android:layout_width="255dp"
-        android:layout_height="180dp"
-        android:layout_marginTop="157dp"
-        android:backgroundTint="#FFFFFF"
-        android:cropToPadding="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="163dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="220dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:contentDescription="Login Button"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEntry"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/register_button" />
+        app:layout_constraintTop_toBottomOf="@+id/loginEntry"
+        app:srcCompat="@drawable/blue_register_button" />
 
-    <ImageView
-        android:id="@+id/checkedinLogo"
-        android:layout_width="297dp"
-        android:layout_height="617dp"
-        android:layout_marginBottom="288dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/checkedin_logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
