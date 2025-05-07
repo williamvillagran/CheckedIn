@@ -13,6 +13,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.utsa.checkedin.model.Friend;
+
 public class AddFriendsActivity extends AppCompatActivity {
 
     private EditText emailInput;
@@ -22,6 +27,7 @@ public class AddFriendsActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference usersRef;
     private DatabaseReference friendsRef;
+    private List<Friend> myFriends = new ArrayList<>();
 
     private String currentUserId;
     private String foundUserId;  // Stores UID of searched user
@@ -30,6 +36,9 @@ public class AddFriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addfriends);
+
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        friendsRef = FirebaseDatabase.getInstance().getReference("friends").child(currentUserId);
 
         // Initialize views
         emailInput = findViewById(R.id.emailInput);
@@ -46,7 +55,6 @@ public class AddFriendsActivity extends AppCompatActivity {
 
         currentUserId = user.getUid();
         usersRef = FirebaseDatabase.getInstance().getReference("users");
-        friendsRef = FirebaseDatabase.getInstance().getReference("friends");
 
         // Search user by email
         searchButton.setOnClickListener(v -> {

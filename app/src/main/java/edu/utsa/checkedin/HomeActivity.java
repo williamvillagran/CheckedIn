@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     startSharingLocation();
-                    Toast.makeText(getApplicationContext(), "Sharing Has Started", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_SHORT).show();
                 } else {
                     stopSharingLocation();
                     Toast.makeText(getApplicationContext(), "Sharing Has Stopped", Toast.LENGTH_SHORT).show();

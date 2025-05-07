@@ -71,8 +71,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             // Login successful
-                            Toast.makeText(MainActivity.this, "Login successful!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, userId, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(MainActivity.this, "Login successful!!", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(MainActivity.this, HomeActivity.class));
                             finish();
                         } else {

@@ -33,6 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
         button.setOnClickListener(v -> registerNewUser());
     }
 
+
+
     private void registerNewUser() {
         // Get values from input fields
         String email = emailTextView.getText().toString().trim();
