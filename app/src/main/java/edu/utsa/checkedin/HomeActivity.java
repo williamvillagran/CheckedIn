@@ -5,8 +5,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -42,9 +42,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.home_activity);
 
         ToggleButton beginToggleButton = findViewById(R.id.beginToggleButton);
-        Button findFriendsButton = findViewById(R.id.findFriendsButton);
-        Button addFriendsButton =  findViewById(R.id.addFriendsButton);
-        Button settingsButton = findViewById(R.id.settingsButton);
+        ImageButton findFriendsButton = findViewById(R.id.findFriendsButton);
+        ImageButton addFriendsButton =  findViewById(R.id.addFriendsButton);
+        ImageButton settingsButton = findViewById(R.id.settingsButton);
 
         requestPermissions();
 
@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
+        // Set up the onCheckedChangeListener for the ToggleButton
         beginToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -90,12 +91,12 @@ public class HomeActivity extends AppCompatActivity {
 //            }
 //        });
         }
-
     private void startSharingLocation() {
         LocationRequest request = LocationRequest.create()
                 .setInterval(5000)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY);
 
+        // Create a new LocationCallback
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
