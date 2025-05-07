@@ -23,44 +23,59 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
 
         db = FirebaseFirestore.getInstance();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.id_map);
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.id_map);
         mapFragment.getMapAsync(this);
 
     }
 
-    // Get a handle to the GoogleMap object and display marker.
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+
+        // Example: San Antonio, TX (or any lat/lng you want)
+        LatLng demoLocation = new LatLng(29.4241, -98.4936);
+
         googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
+                .position(demoLocation)
+                .title("Friend's Location"));
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(demoLocation, 14f));
     }
 
-    public void fetchLatestLocation() {
-        db.collection("users")
-                .document(friendUserId)
-                .collection("trips")
-                .orderBy("startTime", Query.Direction.DESCENDING)
-                .limit(1)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        DocumentSnapshot tripDoc = queryDocumentSnapshots.getDocuments().get(0);
+    // Get a handle to the GoogleMap object and display marker.
+//    @Override
+//    public void onMapReady(GoogleMap googleMap) {
+//        googleMap.addMarker(new MarkerOptions()
+//                .position(new LatLng(0, 0))
+//                .title("Marker"));
+//    }
 
-                        Double lat = tripDoc.getDouble("latitude");
-                        Double lng = tripDoc.getDouble("longitude");
-
-                        if (lat != null && lng != null) {
-                            LatLng location = new LatLng(lat, lng);
-                            googleMap.addMarker(new MarkerOptions()
-                                    .position(location)
-                                    .title("Friend's Location"));
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure
-                });
-    }
+//    public void fetchLatestLocation() {
+//        db.collection("users")
+//                .document(friendUserId)
+//                .collection("trips")
+//                .orderBy("startTime", Query.Direction.DESCENDING)
+//                .limit(1)
+//                .get()
+//                .addOnSuccessListener(queryDocumentSnapshots -> {
+//                    if (!queryDocumentSnapshots.isEmpty()) {
+//                        DocumentSnapshot tripDoc = queryDocumentSnapshots.getDocuments().get(0);
+//
+//                        Double lat = tripDoc.getDouble("latitude");
+//                        Double lng = tripDoc.getDouble("longitude");
+//
+//                        if (lat != null && lng != null) {
+//                            LatLng location = new LatLng(lat, lng);
+//                            googleMap.addMarker(new MarkerOptions()
+//                                    .position(location)
+//                                    .title("Friend's Location"));
+//                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Handle failure
+//                });
+//    }
 }
