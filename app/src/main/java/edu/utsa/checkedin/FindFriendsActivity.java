@@ -46,66 +46,78 @@ public class FindFriendsActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onMapReady(GoogleMap map) {
+        // Initialize the map
         this.googleMap = map;
         loadAndDisplayFriendsLocations();
     }
 
     private void loadAndDisplayFriendsLocations() {
+
+        // Get the current user's ID
         String currentUserId = auth.getCurrentUser().getUid();
 
-        usersRef.child(currentUserId).child("friends")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        myFriends.clear();
+        // Listen for changes in friends list
+        usersRef.child(currentUserId).child("friends").addValueEventListener(new ValueEventListener() {
 
-                        for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
-                            Friend friend = friendSnapshot.getValue(Friend.class);
-                            if (friend != null) {
-                                myFriends.add(friend);
-                                fetchFriendLocation(friend);
-                            }
-                        }
-                    }
+            // Handle changes in friends list
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Clear old friends list
+                myFriends.clear();
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(FindFriendsActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+                // Iterate through friends list
+                for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
+                    Friend friend = friendSnapshot.getValue(Friend.class);
+                    if (friend != null) {
+                        // Add friend to list
+                        myFriends.add(friend);
+                        // Listen to location changes for each friend
+                        fetchFriendLocation(friend);
                     }
-                });
+                }
+            }
+
+            // Handle errors
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(FindFriendsActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void fetchFriendLocation(Friend friend) {
-        usersRef.child(friend.getUid()).child("location")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Double lat = snapshot.child("latitude").getValue(Double.class);
-                        Double lng = snapshot.child("longitude").getValue(Double.class);
+        // Listens for friend location updates in the database
+        usersRef.child(friend.getUid()).child("location").addValueEventListener(new ValueEventListener() {
+            // Handle changes in friend location
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Get friend location
+                Double lat = snapshot.child("latitude").getValue(Double.class);
+                Double lng = snapshot.child("longitude").getValue(Double.class);
 
-                        if (lat != null && lng != null && googleMap != null) {
-                            LatLng friendLoc = new LatLng(lat, lng);
+                // Update marker position
+                if (lat != null && lng != null && googleMap != null) {
+                    LatLng friendLoc = new LatLng(lat, lng);
 
-                            // 🧼 Remove old marker for this friend if exists
-                            if (friendMarkers.containsKey(friend.getUid())) {
-                                Marker oldMarker = friendMarkers.get(friend.getUid());
-                                if (oldMarker != null) oldMarker.remove();
-                            }
-
-                            // ➕ Add new marker
-                            Marker newMarker = googleMap.addMarker(new MarkerOptions()
-                                    .position(friendLoc)
-                                    .title(friend.getEmail()));
-
-                            // 💾 Store new marker
-                            friendMarkers.put(friend.getUid(), newMarker);
-                        }
+                    // Remove old marker for friend
+                    if (friendMarkers.containsKey(friend.getUid())) {
+                        Marker oldMarker = friendMarkers.get(friend.getUid());
+                        if (oldMarker != null) oldMarker.remove();
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(FindFriendsActivity.this, "Failed to fetch location for " + friend.getEmail(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    // Create new marker for friend
+                    Marker newMarker = googleMap.addMarker(new MarkerOptions()
+                            .position(friendLoc)
+                            .title(friend.getEmail()));
+                    // Store the new marker
+                    friendMarkers.put(friend.getUid(), newMarker);
+                }
+            }
+            // Handle errors
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(FindFriendsActivity.this, "Failed to fetch location for " + friend.getEmail(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

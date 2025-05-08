@@ -85,6 +85,7 @@ public class HomeActivity extends AppCompatActivity {
     private void startSharingLocation() {
         LocationRequest request = LocationRequest.create()
                 .setInterval(5000)
+                .setFastestInterval(3000)
                 .setPriority(Priority.PRIORITY_HIGH_ACCURACY);
 
         locationCallback = new LocationCallback() {
