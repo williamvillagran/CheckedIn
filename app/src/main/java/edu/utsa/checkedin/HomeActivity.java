@@ -170,7 +170,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
                     String friendId = friendSnapshot.getKey();
-                    sendNotificationToUser(friendId, "Your friend ended their trip.");
+                    sendNotificationToUser(friendId, "Trip Ended", "Your friend ended their trip.");
                 }
             }
 
@@ -194,7 +194,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot friendSnapshot : snapshot.getChildren()) {
                     String friendId = friendSnapshot.getKey();  // UID is the key itself
-                    sendNotificationToUser(friendId, "Your friend started a new trip!");
+                    sendNotificationToUser(friendId,"Trip Started" ,"Your friend started a new trip!");
                 }
             }
 
@@ -207,14 +207,14 @@ public class HomeActivity extends AppCompatActivity {
 
 
     // Sends notification to user
-    private void sendNotificationToUser(String friendId, String message) {
+    private void sendNotificationToUser(String friendId, String title, String message) {
         DatabaseReference notifRef = FirebaseDatabase.getInstance()
                 .getReference("notifications")
                 .child(friendId)
                 .push();
 
         Map<String, Object> notifData = new HashMap<>();
-        notifData.put("title", "Trip Started");
+        notifData.put("title", title);
         notifData.put("message", message);
         notifData.put("timestamp", System.currentTimeMillis());
 
