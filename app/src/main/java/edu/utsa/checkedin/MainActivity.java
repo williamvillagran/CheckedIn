@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,12 +44,26 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance();
 
+        ImageView checkedinlogo = findViewById(R.id.checkedinlogo);
+        checkedinlogo.setAlpha(0f);
+        checkedinlogo.animate().alpha(1f).setDuration(1500);
+
         loginEntry = findViewById(R.id.loginEntry);
         passwordEntry = findViewById(R.id.passwordEntry);
+
+        loginEntry.setAlpha(0f);
+        loginEntry.animate().alpha(1f).setDuration(1500);
+
+        passwordEntry.setAlpha(0f);
+        passwordEntry.animate().alpha(1f).setDuration(1500);
+
+
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
 
         loginButton.setOnClickListener(v -> loginUserAccount());
+        loginButton.setAlpha(0f);
+        loginButton.animate().alpha(1f).setDuration(1500);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        registerButton.setAlpha(0f);
+        registerButton.animate().alpha(1f).setDuration(1500);
 
 
     }

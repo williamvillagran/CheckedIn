@@ -7,9 +7,15 @@
 
     <Button
         android:id="@+id/signout_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:backgroundTint="#1A73E8"
+        android:scaleType="centerInside"
         android:text="Sign Out"
+        android:textSize="38sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:cornerRadius="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
