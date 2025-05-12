@@ -142,6 +142,7 @@ public class AddFriendsActivity extends AppCompatActivity {
                         // Firestore
                         Map<String, Object> friendEntry = new HashMap<>();
                         friendEntry.put("email", foundUserEmail);
+                        friendEntry.put("uid", foundUserId);
 
                         FirebaseFirestore.getInstance()
                                 .collection("users")
@@ -154,6 +155,8 @@ public class AddFriendsActivity extends AppCompatActivity {
 
                         Map<String, Object> reverseEntryMap = new HashMap<>();
                         reverseEntryMap.put("email", currentUser.getEmail());
+                        reverseEntryMap.put("uid", currentUser.getUid());
+
 
                         FirebaseFirestore.getInstance()
                                 .collection("users")
